@@ -1,0 +1,94 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Fayrouz Candle Shop</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="icon" href="./assets/logo.jpg"/>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container brand">
+        <img src="./assets/logo.jpg" alt="Fayrouz logo"/>
+        <div>
+          <h1>fayrouz</h1>
+          <span class="badge">candle shop</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h2>Handcrafted candles for cozy moments</h2>
+        <p>All items below are available for <strong>80 SR </strong> each.</p>
+      </section>
+      <div id="root"></div>
+    </main>
+
+    <footer class="footer">
+      © 2025 Fayrouz Candle Shop — All rights reserved.
+    </footer>
+
+    <!-- React / ReactDOM / Babel (runs without any build step) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const products = [
+        { id: 1, name: "Blue Flower Candle Set", price: 12, image: "./assets/product1.jpg" },
+        { id: 2, name: "White Rose Candle Set", price: 80, image: "./assets/product2.jpg" },
+        { id: 2, name: "Red & White Rose Candle Set", price: 80, image: "./assets/product3.jpg" },
+        { id: 2, name: "Yellow Rose Candle Set", price: 80, image: "./assets/product4.jpg" },
+        { id: 2, name: "Vintage Rose Candle Set", price: 80, image: "./assets/product5.jpg" },
+        
+      ];
+
+      function ProductCard({product, onAdd}){
+        return (
+          <article className="card">
+            <img src={product.image} alt={product.name} />
+            <div className="content">
+              <h3>{product.name}</h3>
+              <div className="price">{product.price} SR</div>
+              <button className="btn" onClick={() => onAdd(product)}>Add to Cart</button>
+            </div>
+          </article>
+        )
+      }
+
+      function App(){
+        const [cart, setCart] = React.useState([]);
+        const addToCart = (p) => setCart(prev => [...prev, p]);
+        const total = cart.reduce((sum, p) => sum + p.price, 0);
+
+        const checkout = () => {
+          if(cart.length === 0){
+            alert('Your cart is empty!');
+            return;
+          }
+          const items = cart.map(p => p.name).join(', ');
+          const msg = encodeURIComponent(`hey fayrouz candles i want to order: ${items}`);
+          window.open(`https://wa.me/966599321823?text=${msg}`, '_blank');
+        }
+
+        return (
+          <div>
+            <section className="grid">
+              {products.map(p => <ProductCard key={p.id} product={p} onAdd={addToCart} />)}
+            </section>
+            <section style={{marginTop: '24px', textAlign:'center'}}>
+              <h3>Cart ({cart.length} items) — Total: {total} SR</h3>
+              <button className="btn" style={{marginTop:'12px'}} onClick={checkout}>Checkout via WhatsApp</button>
+            </section>
+          </div>
+        )
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
